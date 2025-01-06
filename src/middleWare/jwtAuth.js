@@ -14,17 +14,13 @@ const jwtAuth = async (req, res, next) => {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
 
-    if (!token) {
-      return res.status(401).json({ success: false, error: 'Token manquant' });
-    }
+    if (!token) return res.status(401).json({ success: false, error: 'Token manquant' });
 
     const decoded = jwt.verify(token, SECRET_KEY);
-    const userId = decoded.userId;
+    const userId = decoded.id;
 
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ success: false, error: 'Utilisateur non trouvé' });
-    }
+    if (!user) return res.status(404).json({ success: false, error: 'Utilisateur non trouvé' });
 
     req.user = user;
 
