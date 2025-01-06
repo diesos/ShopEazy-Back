@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Schema } = require("mongoose");
+const { Schema, Types } = require("mongoose");
 
 // User Schema
 // ============================================================================
@@ -64,4 +64,4 @@ UserSchema.index({ email: 1 });
 
 const User = mongoose.model("User", UserSchema);
 
-export default User;
+module.exports = User;

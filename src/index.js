@@ -3,6 +3,8 @@ const cors = require("cors");
 const userRoutes = require("./routes/UserRoutes");
 const listRoutes = require("./routes/ListRoutes")
 const Database = require("./services/db")
+const mongoose = require('mongoose');
+
 
 
 
@@ -18,7 +20,6 @@ const port = 9000;
 
 // Database.getInstance();
 
-const mongoose = require('mongoose');
 
 const MONGO_URL = process.env.MONGO_URL
 
@@ -27,7 +28,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('Connected to MongoDB, URL:', MONGO_URL))
+  .then(() => console.log('Connected to MongoDB, URL'))
   .catch((err) => console.error('Failed to connect to MongoDB', err));
 
 // Middleware
