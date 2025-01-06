@@ -7,8 +7,7 @@ const bcrypt = require("bcrypt");
 
 module.exports.authLogin = async (userParams) => {
   const { email, password } = userParams;
-  if (!email || !password)
-    throw new Error("Email and password are required");
+  if (!email || !password) throw new Error("Email and password are required");
 
   const user = await User.findOne({ email });
   if (!user) throw new Error("Invalid credentials");
@@ -26,9 +25,7 @@ module.exports.authLogin = async (userParams) => {
 module.exports.registerUser = async (userParams) => {
   // Vérifiez si l'utilisateur existe déjà
   const existingUser = await User.findOne({ email: userParams.email });
-  if (existingUser) {
-    throw new Error("User already exists");
-  }
+  if (existingUser) throw new Error("User already exists");
 
   // Hash du mot de passe
   const hashedPassword = await bcrypt.hash(userParams.password, 10);

@@ -7,9 +7,7 @@ const User = require('../models/userModels.js');
 const jwtAuth = async (req, res, next) => {
   const SECRET_KEY = process.env.SECRET_KEY;
 
-  if (!SECRET_KEY) {
-    return res.status(500).json({ success: false, error: 'Clé secrète manquante' });
-  }
+  if (!SECRET_KEY) return res.status(500).json({ success: false, error: 'Clé secrète manquante' });
 
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
