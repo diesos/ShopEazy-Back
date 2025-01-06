@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-const { Schema, Types } = require("mongoose");
+const { Schema, Types } = mongoose;
+
+
 
 // User Schema
 // ============================================================================
@@ -11,6 +13,12 @@ const UserSchema = new Schema(
       required: [true, "Email is required"],
       unique: true,
       trim: true,
+      validate: {
+        validator: function (v) {
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+        },
+        message: (props) => `${props.value} is not a valid email!`,
+      },
     },
     password: {
       type: String,
@@ -19,18 +27,19 @@ const UserSchema = new Schema(
     },
     firstName: {
       type: String,
-      required: [false],
       trim: true,
     },
     lastName: {
       type: String,
-      required: [false],
       trim: true,
     },
     shopList: [
       {
         _id: { type: Types.ObjectId, default: () => new Types.ObjectId() },
-        value: { type: String, required: true },
+        value: {
+          type: String,
+          required: [true, "Value is required in shopList items"],
+        },
         createdAt: { type: Date, default: Date.now },
       },
     ],
@@ -39,6 +48,8 @@ const UserSchema = new Schema(
     timestamps: true,
   }
 );
+
+
 
 // Filter sensitive information when converting document to JSON
 // ============================================================================
@@ -54,10 +65,14 @@ UserSchema.methods.toJSON = function () {
   return obj;
 };
 
+
+
 // Index email field for faster queries
 // ============================================================================
 
 UserSchema.index({ email: 1 });
+
+
 
 // Export User model
 // ============================================================================
