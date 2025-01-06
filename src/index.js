@@ -68,7 +68,7 @@ app.listen(port, () => {
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿`)
 console.log(`✅ ✅` + `Server listening on http://localhost:${port}`.green.bold + `✅ ✅`.green);
-console.log('📦 Database Status:', Database.connected ? 'Connected ✅'.green : 'Disconnected ❌'.red);
+console.log('📦 Database Status:', 'Waiting for connection '.yellow);
 console.log(`🚀 Server running at: ${`http://localhost:${port}`.green.bold}`);
 console.log('💡 Ready to handle requests!');
 });
