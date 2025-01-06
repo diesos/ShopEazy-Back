@@ -2,7 +2,11 @@ const User = require("../models/userModels");
 const bcrypt = require("bcrypt");
 
 module.exports.register = async (req, res) => {
-  let { email, password, firstName, lastName } = req.body;
+  let { email, password, firstName, lastName, shopList = [] } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
 
   try {
     // Vérifiez si l'utilisateur existe déjà
@@ -20,13 +24,13 @@ module.exports.register = async (req, res) => {
       password: hashedPassword,
       firstName,
       lastName,
+      shopList,
     });
 
-    // await newUser.save();
+    await newUser.save();
 
-    console.log("NEW USER" + newUser);
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ message: "User registered successfully", user: newUser });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
