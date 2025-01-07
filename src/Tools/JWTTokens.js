@@ -25,7 +25,7 @@ const data = (user) => {
 // ============================================================================
 
 const createAccessToken = (user) => {
-  return jwt.sign(data(user), SECRET_KEY, { expiresIn: "1h" });
+  return jwt.sign(data(user), SECRET_KEY, { expiresIn: "12h" });
 };
 
 // Create a refresh token for the user
