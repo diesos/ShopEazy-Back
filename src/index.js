@@ -7,7 +7,6 @@ const colors = require('@colors/colors');
 
 
 
-
 // Initialisation de l'application
 // ===========================================================================================
 
@@ -37,7 +36,6 @@ app.use(express.urlencoded({ extended: true })); // Middleware pour parser les r
 // Routes
 // ===========================================================================================
 
-app.get("/", (_, res) => { res.send("ShopEazy sexy lady Oliver Twist")});
 app.use("/user", userRoutes);
 app.use("/list", listRoutes)
 
