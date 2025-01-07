@@ -36,10 +36,9 @@ const UserSchema = new Schema(
     shopList: [
       {
         _id: { type: Types.ObjectId, default: () => new Types.ObjectId() },
-        value: {
-          type: String,
-          required: [true, "Value is required in shopList items"],
-        },
+        name: {type: String, required: [true, "Value is required in shopList items"]},
+        quantity: { type: Number, default: 1 },
+        bought: { type: Boolean, default: false },
         createdAt: { type: Date, default: Date.now },
       },
     ],
