@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const userRoutes = require("./routes/UserRoutes");
 const listRoutes = require("./routes/ListRoutes")
-const Database = require("./services/db")
 const mongoose = require('mongoose');
 const colors = require('@colors/colors');
 
@@ -18,9 +17,6 @@ const port = 9000;
 
 // Database
 // ===========================================================================================
-
-// Database.getInstance();
-
 
 const MONGO_URL = process.env.MONGO_URL
 
@@ -50,7 +46,6 @@ app.use("/list", listRoutes)
 
 app.listen(port, () => {
   console.clear();
-    console.log(Database);
     console.log(`
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠷⠾⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
