@@ -4,14 +4,15 @@ const {
 	addItemToShopList,
 	deleteItemInList,
 	updateItemInList,
+	getOneItem
 } = require("../controllers/ListControllers.js");
 const { jwtAuth } = require("../middleWare/jwtAuth");
 
 listRouter.get("/", jwtAuth, listAll);
-listRouter.get("/item", jwtAuth, );
+listRouter.get("/item/:id", jwtAuth, getOneItem );
 listRouter.post("/item", jwtAuth, addItemToShopList);
-listRouter.put("/item", jwtAuth, updateItemInList);
-listRouter.delete("/item", jwtAuth, deleteItemInList);
+listRouter.put("/item/:id", jwtAuth, updateItemInList);
+listRouter.delete("/item/:id", jwtAuth, deleteItemInList);
 
 // Export du module
 // ===========================================================================================

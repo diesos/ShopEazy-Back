@@ -1,6 +1,5 @@
 require("dotenv").config();
-const { createItem } = require("../services/createItem");
-const { verifyUser } = require("../services/authService");
+const { createItem, deleteItem, updateItem, getItem, getAllItems } = require("../services/ListServices");
 
 
 
@@ -8,24 +7,50 @@ const { verifyUser } = require("../services/authService");
 // ============================================================================
 
 const listAll = async (req, res) => {
+  const user = req.user;
+
+  // Vérifiez si l'utilisateur est connecté
+  if (!user)
+    return res.status(401).json({ success: false, error: "Unauthorized" });
+
   try {
-    const token = req.header("Authorization").replace("Bearer ", "");
+    // Récupération de tous les items de la shopList
+    const allItems = await getAllItems(user);
 
-    const user = await verifyUser(token);
-
-    if (!user) {
-      return res.status(401).json({ success: false, error: "Unauthorized" });
-    }
-    if (!user.shopList || user.shopList.length === 0) {
-      return res.status(404).json({ success: false, error: "Shop list is empty" });
-    }
-
-    res.status(200).json({ success: true, shopList: user.shopList });
+    return res.status(200).json(allItems);
   }
   catch (error) {
-      console.error("Erreur lors de la récupération de la shopList :", error.message);
-      res.status(500).json({ success: false, error: error.message });
-    }
+    console.error("Erreur lors de la récupération de la shopList :", error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+
+
+// Get an items in the list
+// ============================================================================
+
+const getOneItem = async (req, res) => {
+  const user = req.user;
+  const itemId = req.params.id;
+
+  // Vérifiez si l'utilisateur est connecté
+  if (!user)
+    return res.status(401).json({ success: false, error: "Unauthorized" });
+
+  // Vérifiez si la liste de courses est vide
+  if (!user.shopList || user.shopList.length === 0)
+    return res.status(404).json({ success: false, error: "Shop list is empty" });
+
+  try {
+    // Recherche de l'item dans la shopList
+    const item = await getItem(itemId, user);
+
+    return res.status(200).json(item);
+  } catch (error) {
+    console.error("Error while searching item :", error.message);
+    return res.status(500).json({ success: false, error: error.message });
+  }
 };
 
 
@@ -34,28 +59,18 @@ const listAll = async (req, res) => {
 // ============================================================================
 
 const addItemToShopList = async (req, res) => {
+  const user = req.user;
+  const item = req.body;
+
+  // Vérifiez si l'utilisateur est connecté
+  if (!user)
+    return res.status(401).json({ success: false, error: "Unauthorized" });
+
   try {
-    const token = req.header("Authorization").replace("Bearer ", "");
+    // Ajout de l'item dans la shopList
+    const newItem = await createItem(item, user);
 
-    const user = await verifyUser(token);
-
-    if (!user) {
-      return res.status(401).json({ success: false, error: "Unauthorized" });
-    }
-    const { nom, quantite } = req.body;
-
-    const result = await createItem(nom, quantite);
-
-    if (!result.success) {
-      return res.status(500).json({ success: false, error: result.error });
-    }
-
-    // Ajouter l'item à la shopList de l'utilisateur
-    user.shopList.push(result.item._id);
-
-    await user.save();
-
-    res.status(200).json({ success: true, item: result.item });
+    res.status(200).json(newItem);
   } catch (error) {
     console.error("Erreur lors de l'ajout à la shopList  :", error.message);
     res.status(500).json({ success: false, error: error.message });
@@ -68,27 +83,18 @@ const addItemToShopList = async (req, res) => {
 // ============================================================================
 
 const deleteItemInList = async (req, res) => {
+  const user = req.user;
+  const { id } = req.params;
+
+  // Vérifiez si l'utilisateur est connecté
+  if (!user)
+    return res.status(401).json({ success: false, error: "Unauthorized" });
+
   try {
-    const token = req.header("Authorization").replace("Bearer ", "");
-
-    const user = await verifyUser(token);
-
-    if (!user) {
-      return res.status(401).json({ success: false, error: "Unauthorized" });
-    }
-
-    const { id } = req.body;
-
-    if (!user.shopList.includes(id)) {
-      return res.status(404).json({ success: false, error: "Item non trouvé dans la liste" });
-    }
-
     // Suppression de l'item dans la shopList
-    user.shopList.pull(id);
+    const deletedItem = await deleteItem(id, user);
 
-    await user.save();
-
-    res.status(200).json({ success: true, item: result.item });
+    res.status(200).json(deletedItem);
   } catch (error) {
     console.error("Erreur lors de l'ajout à la shopList  :", error.message);
     res.status(500).json({ success: false, error: error.message });
@@ -101,31 +107,30 @@ const deleteItemInList = async (req, res) => {
 // ============================================================================
 
 const updateItemInList = async (req, res) => {
-  try {
-    const token = req.header("Authorization").replace("Bearer ", "");
+  const user = req.user;
+  const { id } = req.params;
+  const updatedData = req.body;
 
-    const user = await verifyUser(token);
+  // Vérifiez si l'utilisateur est connecté
+  if (!user)
+    return res.status(401).json({ success: false, error: "Unauthorized" });
 
-    const { id } = req.body;
+  try {  
+    // Mise à jour de l'item dans la shopList
+    const updatedItem = await updateItem(id, user, updatedData);
 
-    if (!user.shopList.includes(id)) {
-      return res.status(404).json({ success: false, error: "Item non trouvé dans la liste" });
-    }
-
-    // Suppression de l'item dans la shopList
-    user.shopList.findOneAndUpdate(id);
-
-    await user.save();
-
-    res.status(200).json({ success: true, item: result.item });
+    res.status(200).json(updatedItem);
   } catch (error) {
     console.error("Erreur lors de l'ajout à la shopList  :", error.message);
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
-module.exports = {
+
+
+module.exports ={
   listAll,
+  getOneItem,
   addItemToShopList,
   deleteItemInList,
   updateItemInList,
