@@ -7,7 +7,9 @@ const { jwtAuth } = require("../middleWare/jwtAuth");
 userRouter.post("/login", login);
 userRouter.post("/register", register);
 userRouter.post("/reset-password", jwtAuth, resetPassword);
-userRouter.get("/me", jwtAuth, (_, res) => {res.send("User profile page");});
+userRouter.get("/me", jwtAuth, (req, res) => {
+	res.json(req.user);
+});
 
 // Export du module
 // ===========================================================================================
