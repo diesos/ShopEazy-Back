@@ -1,8 +1,7 @@
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
-const User = require("../models/userModels.js");
 const { createItem } = require("../services/createItem");
 const { verifyUser } = require("../services/authService");
+
 
 
 // List all items in the list
@@ -28,6 +27,8 @@ const listAll = async (req, res) => {
       res.status(500).json({ success: false, error: error.message });
     }
 };
+
+
 
 // Add item to the list
 // ============================================================================
@@ -62,6 +63,7 @@ const addItemToShopList = async (req, res) => {
 };
 
 
+
 // Delete item in the list
 // ============================================================================
 
@@ -92,6 +94,8 @@ const deleteItemInList = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+
 
 // Update item in the list
 // ============================================================================

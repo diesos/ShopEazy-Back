@@ -1,7 +1,6 @@
 const User = require("../models/userModels");
 const bcrypt = require("bcrypt");
 const xss = require("xss");
-const jwt = require("jsonwebtoken");
 const { generateTokens } = require("../Tools/JWTTokens");
 const { authLogin, registerUser } = require("../services/UserServices");
 
@@ -55,12 +54,13 @@ module.exports.login = async (req, res) => {
 };
 
 
+
 // Reset password
 // ============================================================================
 
 module.exports.resetPassword = async (req, res) => {
   let { newPassword } = req.body;
-  let userParams = req.user;
+  let userId = req.user.id;
   
   // Validation de l'entrée
   if (!newPassword) return res.status(400).json({ error: "New password is required" });
@@ -69,7 +69,7 @@ module.exports.resetPassword = async (req, res) => {
   
   try {
     // Trouver l'utilisateur par ID
-    const user = await User.findById(userParams.id);
+    const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
     // Hash du nouveau mot de passe
